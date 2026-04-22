@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Lesson Builder (AIM)</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f6f8;
+        color: #333;
+    }
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: centre;
+        margin-bottom: 10px;
+    }
+    p {
+        font-size: 14px;
+        colour: #666;
+    }
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 15px;
+    }
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+    button {
+        margin-top: 20px;
+        padding: 12px;
+        width: 100%;
+        border: none;
+        background: #0078d4;
+        color: white;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #005ea6;
+    }
+    .output {
+        margin-top: 25px;
+        background: #eef3f8;
+        padding: 15px;
+        border-radius: 6px;
+        white-space: pre-wrap;
+        font-family: monospace;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>AI Lesson Builder (AIM)</h1>
+    <p>Fill in the fields below to generate a high-quality lesson prompt.</p>
+
+    <label>Topic</label>
+    <input id="topic" placeholder="e.g. Photosynthesis">
+
+    <label>Group / Year / Level</label>
+    <input id="group" placeholder="e.g. Year 10 / Level 2">
+
+    <label>Prior Knowledge</label>
+    <textarea id="prior" placeholder="What do students already know?"></textarea>
+
+    <label>Key Challenge / Misconception</label>
+    <textarea id="challenge" placeholder="What do students struggle with?"></textarea>
+
+    <label>Lesson Length</label>
+    <input id="length" placeholder="e.g. 1 hour / 2 hours">
+
+    <button onclick="generatePrompt()">Generate Prompt</button>
+
+    <div class="output" id="output"></div>
+</div>
+
+<script>
+function generatePrompt() {
+    const topic = document.getElementById("topic").value;
+    const group = document.getElementById("group").value;
+    const prior = document.getElementById("prior").value;
+    const challenge = document.getElementById("challenge").value;
+    const length = document.getElementById("length").value;
+
+    const prompt = 
+`Actor: Act as an experienced teacher and subject specialist with strong knowledge of effective teaching, assessment, differentiation, and student engagement
+
+Input: I am teaching ${topic} to ${group}. Students already know ${prior} but struggle with ${challenge}
+
+Mission: Create a ${length} lesson on ${topic}. Include:
+- A starter to assess prior knowledge and engage students
+- A clear main teaching phase (explanation, modelling, or demonstration)
+- An engaging activity where students apply their learning
+- Differentiation with scaffolded support
+- A stretch and challenge task
+- Common misconceptions and how to address them
+- A check for understanding
+- A plenary where students explain their learning
+- Include teacher guidance and expected answers`;
+
+    document.getElementById("output").textContent = prompt;
+}
+</script>
+
+</body>
+</html>
