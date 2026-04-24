@@ -1,122 +1,400 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-<meta charset="UTF-8">
-<title>AI Lesson Builder (AIM)</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Lesson Builder A.I.M</title>
+  <style>
+    :root {
+      /* Updated to approximate COPC poster styling (based on typography and typical FE branding) */
+      --bg: #f5f7fa;
+      --panel: #ffffff;
+      --text: #1a1a1a;
+      --muted: #4b5563;
+      --border: #d1d5db;
+
+      /* Primary branding colours */
+      --primary: #003a8f; /* deep navy blue */
+      --primary-dark: #002a66;
+
+      /* Accent colours */
+      --accent: #00a6a6; /* teal accent */
+      --success: #0f766e;
+
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #f4f6f8;
-        color: #333;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
     }
-    .container {
-        max-width: 900px;
-        margin: 40px auto;
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 1000;
+      padding: 10px 14px;
+      background: var(--primary);
+      color: #ffffff;
+      border-radius: 8px;
+      font-weight: 700;
     }
-    h1 {
-        text-align: centre;
-        margin-bottom: 10px;
+
+    .skip-link:focus {
+      top: 16px;
     }
-    p {
-        font-size: 14px;
-        colour: #666;
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+    }
+
+    .page-header p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.1rem);
+    }
+
+    .builder-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    fieldset {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend,
+    .card h2 {
+      margin: 0 0 16px;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
     label {
-        font-weight: bold;
-        display: block;
-        margin-top: 15px;
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
     }
-    input, textarea {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-    }
+
+    input,
+    select,
+    textarea,
     button {
-        margin-top: 20px;
-        padding: 12px;
+      font: inherit;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    #promptOutput {
+      min-height: 420px;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button {
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    .skip-link:focus-visible {
+      outline: 3px solid #111827;
+      outline-offset: 3px;
+    }
+
+    .primary-button {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      background: #e5e7eb;
+      color: var(--text);
+    }
+
+    .secondary-button:hover {
+      background: #d1d5db;
+    }
+
+    .copy-status {
+      min-height: 24px;
+      margin-top: 10px;
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .sticky-actions {
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 16px;
+      }
+
+      .builder-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 14px;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+
+      button {
         width: 100%;
-        border: none;
-        background: #0078d4;
-        color: white;
-        font-size: 16px;
-        border-radius: 6px;
-        cursor: pointer;
+      }
+
+      #promptOutput {
+        min-height: 300px;
+      }
     }
-    button:hover {
-        background: #005ea6;
+
+    @media (max-width: 420px) {
+      .page {
+        padding: 12px;
+      }
+
+      .page-header {
+        text-align: left;
+      }
+
+      .card {
+        padding: 14px;
+      }
     }
-    .output {
-        margin-top: 25px;
-        background: #eef3f8;
-        padding: 15px;
-        border-radius: 6px;
-        white-space: pre-wrap;
-        font-family: monospace;
-    }
-</style>
+  </style>
 </head>
-
 <body>
+  <a class="skip-link" href="#lessonForm">Skip to lesson builder form</a>
 
-<div class="container">
-    <h1>AI Lesson Builder (AIM)</h1>
-    <p>Fill in the fields below to generate a high-quality lesson prompt.</p>
+  <main class="page">
+    <header class="page-header">
+      <h1>AI Lesson Builder AIM</h1>
+      <p id="pageDescription">Create a structured AI prompt for lesson planning. Complete the fields, generate the prompt, then copy it into Copilot or ChatGPT.</p>
+    </header>
 
-    <label>Topic</label>
-    <input id="topic" placeholder="e.g. Topic of the lesson">
+    <section class="builder-grid" aria-labelledby="builderHeading" aria-describedby="pageDescription">
+      <h2 id="builderHeading" class="visually-hidden">AI lesson builder form and generated prompt</h2>
 
-    <label>Group / Year / Level</label>
-    <input id="group" placeholder="e.g. Level 1/2/3, A Level">
+      <form class="card" id="lessonForm" aria-labelledby="lessonDetailsHeading">
+        <fieldset>
+          <legend id="lessonDetailsHeading">Lesson details</legend>
 
-    <label>Prior Knowledge</label>
-    <textarea id="prior" placeholder="What do students already know?"></textarea>
+          <section class="form-group">
+            <label for="subject">Subject or course</label>
+            <input id="subject" name="subject" type="text" autocomplete="off" placeholder="Example: T Level Digital Support and Security" />
+          </section>
 
-    <label>Key Challenge / Misconception</label>
-    <textarea id="challenge" placeholder="What do students struggle with?"></textarea>
+          <section class="form-group">
+            <label for="level">Level or year group</label>
+            <input id="level" name="level" type="text" autocomplete="off" placeholder="Example: Level 3, Year 12, Adult Level 2" />
+          </section>
 
-    <label>Lesson Length</label>
-    <input id="length" placeholder="e.g. 1 hour / 2 hours">
+          <section class="form-group">
+            <label for="topic">Lesson topic</label>
+            <input id="topic" name="topic" type="text" autocomplete="off" placeholder="Example: Cyber security threats and vulnerabilities" />
+          </section>
 
-    <button onclick="generatePrompt()">Generate Prompt</button>
+          <section class="form-group">
+            <label for="lessonLength">Lesson length</label>
+            <input id="lessonLength" name="lessonLength" type="text" autocomplete="off" placeholder="Example: 90 minutes / 2.5 hours" />
+          </section>
 
-    <div class="output" id="output"></div>
-</div>
+          <section class="form-group">
+            <label for="priorKnowledge">What do learners already know?</label>
+            <textarea id="priorKnowledge" name="priorKnowledge" placeholder="Example: Students know basic network terminology but struggle to explain attack methods clearly."></textarea>
+          </section>
 
-<script>
-function generatePrompt() {
-    const topic = document.getElementById("topic").value;
-    const group = document.getElementById("group").value;
-    const prior = document.getElementById("prior").value;
-    const challenge = document.getElementById("challenge").value;
-    const length = document.getElementById("length").value;
+          <section class="form-group">
+            <label for="challenge">What do learners struggle with?</label>
+            <textarea id="challenge" name="challenge" placeholder="Example: They confuse malware, phishing, social engineering and brute-force attacks."></textarea>
+          </section>
 
-    const prompt = 
-`Actor: Act as an experienced teacher and subject specialist with strong knowledge of effective teaching, assessment, differentiation, and student engagement
+          <section class="form-group">
+            <label for="lessonStyle">Lesson style</label>
+            <select id="lessonStyle" name="lessonStyle">
+              <option value="balanced practical and theory">Balanced practical and theory</option>
+              <option value="highly practical">Highly practical</option>
+              <option value="theory with discussion and questioning">Theory with discussion and questioning</option>
+              <option value="scenario-based">Scenario-based</option>
+              <option value="exam-focused">Exam-focused</option>
+            </select>
+          </section>
+        </fieldset>
 
-Input: I am teaching ${topic} to ${group}. Students already know ${prior} but struggle with ${challenge}
+        <section class="sticky-actions" aria-label="Form actions">
+          <section class="button-row">
+            <button type="button" class="primary-button" id="generateButton">Generate Prompt</button>
+            <button type="reset" class="secondary-button">Clear Form</button>
+          </section>
+        </section>
+      </form>
 
-Mission: Create a ${length} lesson on ${topic}. Include:
-- A starter to assess prior knowledge and engage students
-- A clear main teaching phase (explanation, modelling, or demonstration)
-- An engaging activity where students apply their learning
-- Differentiation with scaffolded support
-- A stretch and challenge task
-- Common misconceptions and how to address them
-- A check for understanding
-- A plenary where students explain their learning
-- Include teacher guidance and expected answers`;
+      <section class="card" aria-labelledby="generatedPromptHeading">
+        <h2 id="generatedPromptHeading">Generated prompt</h2>
+        <label class="visually-hidden" for="promptOutput">Generated AI lesson planning prompt</label>
+        <textarea id="promptOutput" readonly placeholder="Your generated prompt will appear here." aria-describedby="copyStatus"></textarea>
 
-    document.getElementById("output").textContent = prompt;
-}
-</script>
+        <section class="button-row" aria-label="Prompt actions">
+          <button type="button" class="primary-button" id="copyButton">Copy Prompt</button>
+        </section>
+        <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+  </main>
 
+  <script>
+    const generateButton = document.getElementById('generateButton');
+    const copyButton = document.getElementById('copyButton');
+    const promptOutput = document.getElementById('promptOutput');
+    const copyStatus = document.getElementById('copyStatus');
+
+    function valueOf(id) {
+      return document.getElementById(id).value.trim() || '[add detail]';
+    }
+
+    function generatePrompt() {
+      const subject = valueOf('subject');
+      const level = valueOf('level');
+      const topic = valueOf('topic');
+      const lessonLength = valueOf('lessonLength');
+      const priorKnowledge = valueOf('priorKnowledge');
+      const challenge = valueOf('challenge');
+      const lessonStyle = valueOf('lessonStyle');
+
+      const prompt = `Actor: Act as an experienced teacher and subject specialist with strong knowledge of effective teaching, assessment, differentiation, adaptive teaching and student engagement.
+
+Input: I am teaching ${subject} to ${level} learners. The lesson topic is ${topic}. The lesson length is ${lessonLength}. Learners already know: ${priorKnowledge}. Learners struggle with: ${challenge}. The lesson should be ${lessonStyle}.
+
+Mission: Create a clear, step-by-step lesson plan. Include:
+1. A starter activity to assess prior knowledge and engage learners
+2. A clear main teaching phase with explanation, modelling or demonstration
+3. An engaging activity where learners apply their learning
+4. Differentiation and scaffolded support
+5. Stretch and challenge for higher-attaining learners
+6. Common misconceptions and how to address them
+7. Checks for understanding throughout the lesson
+8. A plenary where learners explain what they have learned
+9. Teacher guidance, expected answers and suggested timings
+
+Make the lesson practical, accessible and easy for another teacher to deliver.`;
+
+      promptOutput.value = prompt;
+      copyStatus.textContent = 'Prompt generated. You can now copy it.';
+      promptOutput.focus();
+    }
+
+    async function copyPrompt() {
+      const text = promptOutput.value.trim();
+
+      if (!text) {
+        copyStatus.textContent = 'Generate a prompt first.';
+        generateButton.focus();
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        copyStatus.textContent = 'Prompt copied to clipboard.';
+      } catch (error) {
+        promptOutput.focus();
+        promptOutput.select();
+        document.execCommand('copy');
+        copyStatus.textContent = 'Prompt copied to clipboard.';
+      }
+    }
+
+    generateButton.addEventListener('click', generatePrompt);
+    copyButton.addEventListener('click', copyPrompt);
+  </script>
 </body>
 </html>
