@@ -256,6 +256,12 @@
       resize: vertical;
     }
 
+    textarea.field__control--output {
+  min-height: 300px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
     .field__control--output {
       min-height: 330px;
       white-space: pre-wrap;
@@ -319,10 +325,6 @@
       font-weight: 700;
     }
 
-    .fclarger{
-      min-height: 300px;
-    }
-
     @media (max-width: 768px) {
       .app-shell {
         padding: 16px;
@@ -369,6 +371,11 @@
         padding: 14px;
       }
     }
+    @media (max-width: 768px) {
+  textarea.field__control--output {
+    min-height: 300px;
+  }
+}
   </style>
 </head>
 <body>
