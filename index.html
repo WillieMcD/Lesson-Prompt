@@ -319,6 +319,10 @@
       font-weight: 700;
     }
 
+    .fclarger{
+      min-height: 300px;
+    }
+
     @media (max-width: 768px) {
       .app-shell {
         padding: 16px;
@@ -434,7 +438,7 @@
       <section class="panel panel--output" aria-labelledby="generatedPromptHeading">
         <h2 class="panel-title" id="generatedPromptHeading">Generated prompt</h2>
         <label class="visually-hidden" for="promptOutput">Generated AI lesson planning prompt</label>
-        <textarea class="field__control field__control--output" id="promptOutput" readonly placeholder="Your generated prompt will appear here." aria-describedby="copyStatus"></textarea>
+        <textarea class="field__control field__control--output fclarger" id="promptOutput" readonly placeholder="Your generated prompt will appear here." aria-describedby="copyStatus"></textarea>
 
         <div class="actions" aria-label="Prompt actions">
           <button class="button button--primary" type="button" data-action="copy">Copy Prompt</button>
